@@ -3,6 +3,7 @@
 from flask import Flask, request, redirect, render_template, flash
 # from flask_debugtoolbar import DebugToolbarExtension
 from models import db, connect_db, User
+from forms import RegisterForm, LoginForm
 
 # from forms import PetForm
 
