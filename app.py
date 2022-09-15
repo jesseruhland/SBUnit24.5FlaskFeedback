@@ -49,7 +49,7 @@ def create_user():
             return render_template("register.html", form=form)
         session["username"] = new_user.username
         flash(f"Welcome to the FeedbackApp, {new_user.first_name}!", "success")
-        return redirect("/secret")
+        return redirect(f"/users/{new_user.username}")
     
     return render_template("register.html", form=form)
 
@@ -70,22 +70,24 @@ def log_user_in():
         if user:
             session["username"] = user.username
             flash(f"Welcome back, {user.first_name}!", "success")
-            return redirect("/secret")
+            return redirect(f"/users/{user.username}")
         
         else:
             form.username.errors=["Invalid login.  Please try again."]
 
     return render_template("login.html", form=form)
 
-@app.route("/secret")
-def get_secret_page():
+@app.route("/users/<username>")
+def display_user_page(username):
     """Page hidden to users who are not logged in"""
 
     if "username" not in session:
         flash("You must be logged in to view this page!")
-        return redirect("/")
+        return redirect("/register")
 
-    return "You made it!"
+    user = User.query.get(username)
+
+    return render_template("user-detail.html", user=user)
 
 @app.route("/logout", methods=["POST"])
 def logout_user():
@@ -94,6 +96,7 @@ def logout_user():
     session.pop("username")
 
     return redirect("/")
+
 
 
 
