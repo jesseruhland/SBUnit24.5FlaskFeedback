@@ -1,9 +1,10 @@
 """Flask Feedback application."""
 
-from flask import Flask, request, redirect, render_template, flash
+from flask import Flask, request, redirect, render_template, flash, session
 # from flask_debugtoolbar import DebugToolbarExtension
 from models import db, connect_db, User
 from forms import RegisterForm, LoginForm
+from sqlalchemy.exc import IntegrityError
 
 # from forms import PetForm
 
@@ -41,9 +42,13 @@ def create_user():
         new_user = User.register(username, password, email, first_name, last_name)
 
         db.session.add(new_user)
-        db.session.commit()
+        try:
+            db.session.commit()
+        except IntegrityError:
+            form.username.errors.append('That username is already in use. Please choose another.')
+            return render_template("register.html", form=form)
         session["username"] = new_user.username
-        flash(f"Welcome to the FeedbackApp, {new_user.first_name}", "success")
+        flash(f"Welcome to the FeedbackApp, {new_user.first_name}!", "success")
         return redirect("/secret")
     
     return render_template("register.html", form=form)
@@ -64,6 +69,7 @@ def log_user_in():
 
         if user:
             session["username"] = user.username
+            flash(f"Welcome back, {user.first_name}!", "success")
             return redirect("/secret")
         
         else:
@@ -73,5 +79,21 @@ def log_user_in():
 
 @app.route("/secret")
 def get_secret_page():
+    """Page hidden to users who are not logged in"""
+
+    if "username" not in session:
+        flash("You must be logged in to view this page!")
+        return redirect("/")
+
     return "You made it!"
+
+@app.route("/logout", methods=["POST"])
+def logout_user():
+    """Log out current user, redirect to homepage."""
+
+    session.pop("username")
+
+    return redirect("/")
+
+
 
