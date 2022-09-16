@@ -86,7 +86,7 @@ def display_user_page(username):
         flash("You must be logged in to view this page!", "warning")
         return redirect("/login")
 
-    user = User.query.get(username)
+    user = User.query.get_or_404(username)
 
     return render_template("user-detail.html", user=user)
 
@@ -99,7 +99,7 @@ def delete_user(username):
         return redirect("/login")
     
     if username == session['username']:
-        user = User.query.get(username)
+        user = User.query.get_or_404(username)
         db.session.delete(user)
         db.session.commit()
         session.pop("username")
@@ -158,7 +158,7 @@ def updated_feedback(feedback_id):
         flash("You must be logged in to view this page!", "warning")
         return redirect("/login")
 
-    feedback = Feedback.query.get(feedback_id)
+    feedback = Feedback.query.get_or_404(feedback_id)
 
     if feedback.username == session['username']:
         form = FeedbackForm(obj=feedback)
@@ -185,7 +185,7 @@ def delete_feedback(feedback_id):
         flash("You must be logged in to view this page!", "warning")
         return redirect("/login")
 
-    feedback = Feedback.query.get(feedback_id)
+    feedback = Feedback.query.get_or_404(feedback_id)
 
     if feedback.username == session['username']:
         
