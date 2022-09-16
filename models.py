@@ -19,7 +19,7 @@ class User(db.Model):
 
     __tablename__ = "users"
 
-    def __repr__(self) =
+    def __repr__(self):
         """Display user information"""
         u = self
         return f"<User username:{u.username} / {u.first_name} {u.last_name}>"
@@ -30,7 +30,7 @@ class User(db.Model):
     first_name = db.Column(db.String(30), unique=True, nullable=False)
     last_name = db.Column(db.String(30), unique=True, nullable=False)
 
-    feedbacks = db.relationship('Feedback', backref="users", cascade="all, delete")
+    feedbacks = db.relationship('Feedback', backref="user", cascade="all, delete")
 
     @classmethod
     def register(cls, username, password, email, first_name, last_name):
@@ -58,7 +58,7 @@ class Feedback(db.Model):
 
     __tablename__ = "feedbacks"
 
-    def __repr__(self) =
+    def __repr__(self):
         """Display feeback and user information"""
         f = self
         return f"<Feedback title:{f.title} / username:{f.username}>"

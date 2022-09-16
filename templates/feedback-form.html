@@ -1,12 +1,9 @@
 {% extends "base.html" %}
 <!--  -->
-{% block title %}Login{% endblock %}
+{% block title %}Enter Feedback{% endblock %}
 <!--  -->
 {% block main_content %}
-<h1 class="display-4">User Login</h1>
-<p class="text-sm text-secondary">
-  Don't have an account? <a href="/register">Create one here.</a>
-</p>
+<h1 class="display-4">Feedback:</h1>
 <form method="POST">
   {{form.hidden_tag()}}
   <!--  -->
@@ -15,7 +12,7 @@
     {{field.label(class_="form-label")}} {{field(class_="form-control")}}
     <!--  -->
     {% for error in field.errors %}
-    <div class="form-text text-alert">{{error}}</div>
+    <div class="form-text text-danger">{{error}}</div>
     {% endfor %}
     <!--  -->
   </div>

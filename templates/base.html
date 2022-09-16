@@ -34,6 +34,9 @@
             <a class="nav-link" href="/register">Register</a>
             <a class="nav-link" href="/login">Login</a>
             {% else %}
+            <a class="nav-link" href="/users/{{session['username']}}"
+              >{{session['username']}}</a
+            >
             <form action="/logout" method="POST">
               <button class="btn btn-outline-light" type="submit">
                 Logout
